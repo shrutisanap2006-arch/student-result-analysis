@@ -54,3 +54,5 @@ S052,Santosh Patil,Male,56,61,59
 S053,Vandana Krishnan,Female,91,94,89
 S054,Rohit Bansal,Male,43,49,46
 S055,Mamta Devi,Female,78,83,80
+top_10_students.to_excel("output/top_10_students.xlsx", index=False)
+bottom_10_students.to_excel("output/bottom_10_students.xlsx", index=False)

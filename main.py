@@ -1,4 +1,4 @@
-
+# Import required libraries
 import os
 from random import choice
 import pandas as pd
@@ -10,7 +10,7 @@ import matplotlib.ticker as mticker
 import warnings
 warnings.filterwarnings("ignore")
 
-# ── Directory setup ──────────────────────────────────────────
+# Directory setup 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR   = os.path.join(BASE_DIR, "data")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
@@ -21,9 +21,8 @@ for d in [OUTPUT_DIR, GRAPHS_DIR]:
 
 SEPARATOR = "=" * 65
 
-# ════════════════════════════════════════════════════════════
 #  STEP 1 – Load Dataset
-# ════════════════════════════════════════════════════════════
+
 def load_data(filepath: str) -> pd.DataFrame:
     print(f"\n{SEPARATOR}")
     print("  STEP 1 : Loading Dataset")
@@ -33,29 +32,27 @@ def load_data(filepath: str) -> pd.DataFrame:
     print(f"  Columns : {list(df.columns)}")
     return df
 
-
-# ════════════════════════════════════════════════════════════
 #  STEP 2 – Data Cleaning
-# ════════════════════════════════════════════════════════════
+
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     print(f"\n{SEPARATOR}")
     print("  STEP 2 : Data Cleaning")
     print(SEPARATOR)
 
-    # --- Missing values
+    # Missing values
     missing = df.isnull().sum()
     print("\n  Missing values per column:")
     print(missing.to_string())
     df.dropna(inplace=True)
     print(f"\n  ✔  Rows after dropping missing values : {len(df)}")
 
-    # --- Duplicates
+    #  Duplicates
     dupes = df.duplicated().sum()
     print(f"  Duplicate rows found : {dupes}")
     df.drop_duplicates(inplace=True)
     print(f"  ✔  Rows after removing duplicates    : {len(df)}")
 
-    # --- Validate marks (must be 0–100)
+    # Validate marks (must be 0–100)
     mark_cols = ["Math_Marks", "Science_Marks", "English_Marks"]
     for col in mark_cols:
         invalid = df[(df[col] < 0) | (df[col] > 100)]
@@ -67,10 +64,8 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     print(f"\n  ✔  Clean dataset : {len(df)} records ready for analysis.")
     return df
 
-
-# ════════════════════════════════════════════════════════════
 #  STEP 3 – Calculate Derived Columns
-# ════════════════════════════════════════════════════════════
+
 def calculate_results(df: pd.DataFrame) -> pd.DataFrame:
     print(f"\n{SEPARATOR}")
     print("  STEP 3 : Calculating Results")
@@ -96,9 +91,8 @@ def calculate_results(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# ════════════════════════════════════════════════════════════
 #  STEP 4 – Insights
-# ════════════════════════════════════════════════════════════
+
 def generate_insights(df: pd.DataFrame) -> None:
     print(f"\n{SEPARATOR}")
     print("  STEP 4 : Key Insights")
@@ -131,9 +125,8 @@ def generate_insights(df: pd.DataFrame) -> None:
         print(f"    Grade {grade} : {bar}  ({count} students)")
 
 
-# ════════════════════════════════════════════════════════════
 #  STEP 5 – Visualizations
-# ════════════════════════════════════════════════════════════
+
 PALETTE = {
     "bg":      "#0f1117",
     "panel":   "#1a1d27",
@@ -155,7 +148,7 @@ def _apply_dark_style(ax, fig):
         spine.set_edgecolor("#2e3347")
 
 
-# ── 5a. Bar chart — average marks by subject ─────────────────
+# Bar chart — average marks by subject 
 def plot_average_marks(df: pd.DataFrame, path: str) -> None:
     subjects   = ["Math_Marks", "Science_Marks", "English_Marks"]
     labels     = ["Mathematics", "Science", "English"]
@@ -187,7 +180,7 @@ def plot_average_marks(df: pd.DataFrame, path: str) -> None:
     print(f"  ✔  Saved → {path}")
 
 
-# ── 5b. Pie chart — grade distribution ───────────────────────
+#  Pie chart — grade distribution 
 def plot_grade_distribution(df: pd.DataFrame, path: str) -> None:
     grade_order  = ["A", "B", "C", "D", "F"]
     grade_counts = df["Grade"].value_counts()
@@ -227,7 +220,7 @@ def plot_grade_distribution(df: pd.DataFrame, path: str) -> None:
     print(f"  ✔  Saved → {path}")
 
 
-# ── 5c. Histogram — percentage distribution ──────────────────
+#  Histogram — percentage distribution 
 def plot_percentage_histogram(df: pd.DataFrame, path: str) -> None:
     fig, ax = plt.subplots(figsize=(10, 5.5))
     _apply_dark_style(ax, fig)
@@ -270,9 +263,8 @@ def create_visualizations(df: pd.DataFrame) -> None:
     plot_percentage_histogram(df, os.path.join(GRAPHS_DIR, "percentage_histogram.png"))
 
 
-# ════════════════════════════════════════════════════════════
 #  STEP 6 – Save Results
-# ════════════════════════════════════════════════════════════
+
 def save_results(df: pd.DataFrame) -> None:
     print(f"\n{SEPARATOR}")
     print("  STEP 6 : Saving Results")
@@ -282,9 +274,8 @@ def save_results(df: pd.DataFrame) -> None:
     print(f"  ✔  Result CSV saved → {out_path}")
 
 
-# ════════════════════════════════════════════════════════════
 #  STEP 7 – Display Tables
-# ════════════════════════════════════════════════════════════
+
 def display_tables(df: pd.DataFrame) -> None:
     display_cols = ["Student_ID", "Name", "Gender",
                     "Math_Marks", "Science_Marks", "English_Marks",
@@ -312,7 +303,7 @@ def display_tables(df: pd.DataFrame) -> None:
     print(df[stat_cols].describe().round(2).to_string())
 
 
-# ════════════════════════════════════════════════════════════
+
 #  MAIN
 def main():
     print(f"\n{'*' * 65}")
@@ -324,7 +315,7 @@ def main():
     df = clean_data(df)
 
     # ================= ADD =================
-    choice = input("\nAdd Student? (yes/no): ")
+    choice = "no"  # Automatically skip user input when running in GitHub Actions (CI)
 
     if choice.lower() == "yes":
         student_id = input("Enter Student ID: ")
@@ -352,7 +343,7 @@ def main():
         print("Nothing to do.")
 
     # ================= EDIT =================
-    edit_choice = input("\nDo you want to edit a student record? (yes/no): ")
+    edit_choice = "no"  # Automatically skip user input when running in GitHub Actions (CI) 
 
     if edit_choice.lower() == "yes":
         student_id = input("Enter Student ID to edit: ")
@@ -379,7 +370,7 @@ def main():
         print("Nothing to do.")
 
     # ================= SEARCH =================
-    search_choice = input("\nDo you want to search a student? (yes/no): ")
+    search_choice = "no"  # Automatically skip user input when running in GitHub Actions (CI) 
 
     if search_choice.lower() == "yes":
         student_id = input("Enter Student ID to search: ")
@@ -395,7 +386,7 @@ def main():
         print("Nothing to do.")
 
     # ================= DELETE =================
-    delete_choice = input("\nDo you want to delete a student record? (yes/no): ")
+    delete_choice = "no"  # Automatically skip user input when running in GitHub Actions (CI) 
 
     if delete_choice.lower() == "yes":
         student_id = input("Enter Student ID to delete: ")
